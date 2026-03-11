@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: inventory-control-web-system
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  client-id: inventory-control-web-system
+  acks: all
+  retries: 3
+  batch-size: 16384
+  linger-ms: 5
+  buffer-memory: 33554432
+  compression-type: snappy
+
+  topics:
+    inventory-products:
+      name: tp-ics-inventory-products
