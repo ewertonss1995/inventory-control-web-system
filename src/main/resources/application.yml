@@ -9,10 +9,11 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       # Se a rede oscilar, o Spring tentará reenviar a mensagem automaticamente
       retries: 3
+      acks: all # Garante que a mensagem foi recebida por todos os Brokers antes de considerar o envio como bem-sucedido
     properties:
       spring.json.add.type.headers: true # Adiciona informações sobre o tipo do objeto para o receptor
 
 # Propriedade personalizada para o nosso tópico
 app:
   kafka:
-    product-topic: "product-updates-topic"
+    product-topic: "inventory-products"
