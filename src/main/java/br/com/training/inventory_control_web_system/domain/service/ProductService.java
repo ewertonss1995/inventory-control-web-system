@@ -7,7 +7,7 @@ import br.com.training.inventory_control_web_system.domain.models.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@slf4j
+@Slf4j
 @RequiredArgsConstructor
 public class ProductService {
 
