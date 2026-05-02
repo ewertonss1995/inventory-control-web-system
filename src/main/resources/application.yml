@@ -11,3 +11,8 @@ spring:
       retries: 3
     properties:
       spring.json.add.type.headers: true # Adiciona informações sobre o tipo do objeto para o receptor
+
+# Propriedade personalizada para o nosso tópico
+app:
+  kafka:
+    product-topic: "product-updates-topic"

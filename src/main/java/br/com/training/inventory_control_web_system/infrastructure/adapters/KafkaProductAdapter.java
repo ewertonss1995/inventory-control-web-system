@@ -1,6 +1,7 @@
 package br.com.training.inventory_control_web_system.infrastructure.adapters;
 
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import br.com.training.inventory_control_web_system.domain.port.ProductEventPublisher;
@@ -10,20 +11,24 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class KafkaProductAdapter implements ProductEventPublisher {
 
     private final KafkaTemplate<String, Product> kafkaTemplate;
-    private static final String TOPIC = "product-updates";
+    @Value("${app.kafka.product-topic:default-topic}")
+    private String topicName;
+
+    public KafkaProductAdapter(KafkaTemplate<String, Product> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
  
     @Override
     public void publish(Product message) {
-        kafkaTemplate.send(TOPIC, message.getProductName(), message)
+        kafkaTemplate.send(topicName, message.getProductName(), message)
             .whenComplete((result, ex) -> {
                 if (ex == null) {
-                    log.info("Produto enviado com sucesso! Partição: {}", result.getRecordMetadata().partition());
+                    log.info("Produto {} enviado para o tópico: {}", message.getProductName(), topicName);
                 } else {
-                    log.error("Falha ao enviar produto: {}", ex.getMessage());
+                    log.error("Erro ao enviar para o tópico {}: {}", topicName, ex.getMessage());
                 }
             });
     }
