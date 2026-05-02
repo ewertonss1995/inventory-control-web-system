@@ -1,16 +1,13 @@
 spring:
-  application:
-    name: inventory-control-web-system
-kafka:
-  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-  client-id: inventory-control-web-system
-  acks: all
-  retries: 3
-  batch-size: 16384
-  linger-ms: 5
-  buffer-memory: 33554432
-  compression-type: snappy
-
-  topics:
-    inventory-products:
-      name: tp-ics-inventory-products
+  kafka:
+    # O endereço onde o servidor Kafka está rodando (seu Broker)
+    bootstrap-servers: localhost:9092 
+    producer:
+      # O Kafka não entende objetos Java, ele entende bytes. 
+      # Aqui dizemos para ele transformar a Chave e o Valor em texto puro (String)
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      # Se a rede oscilar, o Spring tentará reenviar a mensagem automaticamente
+      retries: 3
+    properties:
+      spring.json.add.type.headers: true # Adiciona informações sobre o tipo do objeto para o receptor
