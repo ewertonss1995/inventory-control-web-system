@@ -1,4 +1,4 @@
-package br.com.training.inventory_control_web_system.adapters.input;
+package br.com.training.inventory_control_web_system.mocks;
 
 import java.math.BigDecimal;
 import br.com.training.inventory_control_web_system.domain.models.Product;

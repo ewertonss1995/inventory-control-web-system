@@ -3,6 +3,7 @@ package br.com.training.inventory_control_web_system.adapters.input;
 import br.com.training.inventory_control_web_system.domain.models.Product;
 import br.com.training.inventory_control_web_system.domain.port.ProductService;
 import br.com.training.inventory_control_web_system.infrastructure.adapters.input.ProductController;
+import br.com.training.inventory_control_web_system.mocks.ProductMock;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("Should successfully call product service when creating a product")
     void shouldCallSaveProductWhenCreatingProduct() {
-        // Given - Agora ProductMock será encontrado pois está no mesmo pacote
+        // Given
         Product mockProduct = ProductMock.createValidProduct();
          
         doNothing().when(productService).saveProduct(mockProduct);
