@@ -1,0 +1,19 @@
+spring:
+  kafka:
+    # O endereço onde o servidor Kafka está rodando (seu Broker)
+    bootstrap-servers: localhost:9092 
+    producer:
+      # O Kafka não entende objetos Java, ele entende bytes. 
+      # Aqui dizemos para ele transformar a Chave e o Valor em texto puro (String)
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      # Se a rede oscilar, o Spring tentará reenviar a mensagem automaticamente
+      retries: 3
+      acks: all # Garante que a mensagem foi recebida por todos os Brokers antes de considerar o envio como bem-sucedido
+    properties:
+      spring.json.add.type.headers: true # Adiciona informações sobre o tipo do objeto para o receptor
+
+# Propriedade personalizada para o nosso tópico
+app:
+  kafka:
+    product-topic: "inventory-products"
