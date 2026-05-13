@@ -7,7 +7,7 @@ on:
 
 jobs:
   say-hello:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Exibir mensagem no log
-      run: echo "✅ GitHub Actions funcionando com sucesso!"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exibir mensagem no log
+        run: echo "✅ GitHub Actions funcionando com sucesso!"
