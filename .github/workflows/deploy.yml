@@ -3,13 +3,15 @@ name: Deploy Terraform to Azure
 on:
   workflow_dispatch:
     inputs:
-      destroy:
+      destroy:              
         description: 'Destruir infraestrutura?'
         required: true
         default: 'false'
-  push:
-     branches:
-       - develop
+        type: boolean 
+
+  push:             
+    branches:
+      - develop
 
 permissions:
   id-token: write
