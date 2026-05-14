@@ -100,7 +100,7 @@ jobs:
         run: |
           ansible-playbook -i inventory ansible/playbook.yml --extra-vars "ansible_sudo_pass=${{ secrets.ADMIN_PASSWORD }}"
 
-  post-tests:
+post-tests:
     if: ${{ github.event.inputs.destroy == 'false' }}
     name: ✅ Pós-Testes de Infra
     needs: deploy
@@ -116,34 +116,25 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Testar Swagger na Porta 8081
+      - name: Verificando saúde da aplicação
         run: |
-          echo "Aguardando aplicação subir com Swagger..."
-          sleep 30
-          response=$(curl -s -o /dev/null -w "%{http_code}" http://$PUBLIC_IP:8081/swagger-ui/index.html)
-          if [ "$response" != "200" ]; then
-            echo "❌ Swagger não respondeu como esperado. Status HTTP: $response"
-            exit 1
-          else
-            echo "✅ Swagger disponível em /swagger-ui/index.html na porta 8081!"
-          fi
+          echo "🔍 Aguardando aplicação inicializar no IP $PUBLIC_IP..."
+          
+          # Loop de 12 tentativas (2 minutos no total)
+          for i in {1..12}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" http://$PUBLIC_IP:8081/api/health)
+            
+            if [ "$response" = "200" ]; then
+              echo "✅ Aplicação está UP e respondendo corretamente na porta 8081!"
+              exit 0
+            fi
+            
+            echo "Attempt $i: Status HTTP $response. Aguardando 10 segundos..."
+            sleep 10
+          done
 
-      - name: Verificar status da VM
-        run: |
-          status=$(az vm get-instance-view \
-            --name "$VM_NAME" \
-            --resource-group "$RESOURCE_GROUP" \
-            --query "instanceView.statuses[?code=='PowerState/running'].displayStatus" \
-            --output tsv)
-
-          echo "Status da VM: $status"
-
-          if [ "$status" != "VM running" ]; then
-              echo "❌ A VM não está em execução!"
-              exit 1
-          else
-              echo "✅ VM está rodando com sucesso!"
-          fi
+          echo "❌ Erro: A aplicação não ficou disponível no endpoint /api/health após 2 minutos."
+          exit 1
 
       - name: Verificar regra da NSG para porta 8081
         run: |
