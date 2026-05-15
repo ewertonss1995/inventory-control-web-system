@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   kafka:
     # O endereço onde o servidor Kafka está rodando (seu Broker)
