@@ -46,6 +46,7 @@
       docker_container:
         name: inventory-control-web-system
         image: ewertonssilva/inventory-control-web-system:latest
+        pull: true
         state: started
         restart_policy: always
         published_ports:
